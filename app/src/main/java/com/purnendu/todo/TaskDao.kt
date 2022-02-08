@@ -14,6 +14,9 @@ interface TaskDao {
     @Query("Select * from Task where isFinished =-1 ")
     fun getTask():LiveData<List<TaskModel>>
 
+    @Query("Select * from Task where isFinished =1 ")
+    fun getFinishedTask():LiveData<List<TaskModel>>
+
 
     @Query("Update Task Set isFinished=1 where id=:uId")
     suspend fun finishedTask(uId:Long)

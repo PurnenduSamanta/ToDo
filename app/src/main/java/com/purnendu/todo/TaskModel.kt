@@ -8,7 +8,6 @@ data class TaskModel(
     var title:String,
     var description:String,
     var category:String,
-    var date:Long,
     var time:Long,
     var isFinished:Int=-1,
     @PrimaryKey(autoGenerate = true)

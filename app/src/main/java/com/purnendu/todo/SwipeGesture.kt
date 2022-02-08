@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 
 
-abstract class SwipeGesture() : ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+abstract class SwipeGesture : ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
@@ -34,8 +34,8 @@ abstract class SwipeGesture() : ItemTouchHelper.SimpleCallback(0,ItemTouchHelper
             actionState,
             isCurrentlyActive
         )
-            .addSwipeLeftActionIcon(R.drawable.ic_baseline_done_24)
-            .addSwipeRightActionIcon(R.drawable.ic_baseline_delete_24)
+            .addSwipeLeftActionIcon(R.drawable.done)
+            .addSwipeRightActionIcon(R.drawable.delete)
             .addSwipeRightBackgroundColor(android.graphics.Color.RED)
             .addSwipeLeftBackgroundColor(android.graphics.Color.GREEN)
             .create()
