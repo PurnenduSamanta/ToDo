@@ -1,4 +1,4 @@
-package com.purnendu.todo
+package com.purnendu.todo.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        tools:context=".TaskActivity"
+        tools:context=".activity.TaskActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
        >

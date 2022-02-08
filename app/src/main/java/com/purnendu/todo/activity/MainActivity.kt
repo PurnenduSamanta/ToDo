@@ -1,6 +1,7 @@
-package com.purnendu.todo
+package com.purnendu.todo.activity
 
 import android.content.Intent
+import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -13,7 +14,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.purnendu.todo.*
+import com.purnendu.todo.database.AppDatabase
+import com.purnendu.todo.database.TaskModel
 import com.purnendu.todo.databinding.ActivityMainBinding
+import com.purnendu.todo.swipe.SwipeGesture
+import com.purnendu.todo.swipe.SwipeViewDecoration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,6 +45,37 @@ class MainActivity : AppCompatActivity() {
         recyclerViewAdapter = Adapter(list)
 
         val swipeGesture = object : SwipeGesture() {
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                SwipeViewDecoration.decorator(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive,
+                    R.drawable.done
+                )
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+            }
+
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val id = recyclerViewAdapter.getItemId(viewHolder.absoluteAdapterPosition)
                 when (direction) {
@@ -68,13 +105,12 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.fab.setOnClickListener {
-            startActivity(Intent(this@MainActivity,TaskActivity::class.java))
+            startActivity(Intent(this@MainActivity, TaskActivity::class.java))
         }
 
         addObserver()
 
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
@@ -129,7 +165,7 @@ class MainActivity : AppCompatActivity() {
 
             if (outerIt != null) {
                 if (!fromSearchView) {
-                    recyclerViewAdapter.setData(outerIt)
+                    recyclerViewAdapter.setData(outerIt.reversed())
                     binding.noTask.apply {
                         visibility = if (outerIt.isEmpty())
                             View.VISIBLE

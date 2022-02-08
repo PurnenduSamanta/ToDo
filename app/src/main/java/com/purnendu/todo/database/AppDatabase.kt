@@ -1,4 +1,4 @@
-package com.purnendu.todo
+package com.purnendu.todo.database
 
 import android.content.Context
 import androidx.room.Database

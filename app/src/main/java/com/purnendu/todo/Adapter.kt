@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.purnendu.todo.database.TaskModel
 
 
 class Adapter(private val list: MutableList<TaskModel>) :
