@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.purnendu.todo.*
 import com.purnendu.todo.database.AppDatabase
-import com.purnendu.todo.database.TaskModel
 import com.purnendu.todo.databinding.ActivityMainBinding
 import com.purnendu.todo.swipe.SwipeGesture
 import com.purnendu.todo.swipe.SwipeViewDecoration
@@ -29,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var database: AppDatabase
     private lateinit var recyclerViewAdapter: Adapter
-    private var list = arrayListOf<TaskModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -42,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         database = AppDatabase.getDataBase(this)
 
 
-        recyclerViewAdapter = Adapter(list)
+        recyclerViewAdapter = Adapter()
 
         val swipeGesture = object : SwipeGesture() {
 
@@ -77,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val id = recyclerViewAdapter.getItemId(viewHolder.absoluteAdapterPosition)
+                val id = recyclerViewAdapter.getTaskItemId(viewHolder.bindingAdapterPosition)
                 when (direction) {
                     ItemTouchHelper.RIGHT -> {
                         CoroutineScope(Dispatchers.IO).launch {
@@ -165,7 +163,8 @@ class MainActivity : AppCompatActivity() {
 
             if (outerIt != null) {
                 if (!fromSearchView) {
-                    recyclerViewAdapter.setData(outerIt.reversed())
+                    //  recyclerViewAdapter.setData(outerIt.reversed())
+                    recyclerViewAdapter.submitList(outerIt.reversed())
                     binding.noTask.apply {
                         visibility = if (outerIt.isEmpty())
                             View.VISIBLE
@@ -173,7 +172,7 @@ class MainActivity : AppCompatActivity() {
                             View.INVISIBLE
                     }
                 } else {
-                    recyclerViewAdapter.setData(outerIt.filter {
+                    recyclerViewAdapter.submitList(outerIt.filter {
                         it.title.contains(newText, true)
                     })
                 }

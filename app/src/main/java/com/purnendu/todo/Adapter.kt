@@ -1,6 +1,5 @@
 package com.purnendu.todo
 
-import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
@@ -12,12 +11,13 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.purnendu.todo.database.TaskModel
 
 
-class Adapter(private val list: MutableList<TaskModel>) :
-    RecyclerView.Adapter<Adapter.MyViewHolder>() {
+class Adapter :
+    ListAdapter<TaskModel, Adapter.MyViewHolder>(DiffUtil()) {
 
     private val colorArray = arrayOf(
         "#ef5777", "#575fcf", "#4bcffa", "#34e7e4", "#0be881",
@@ -37,17 +37,31 @@ class Adapter(private val list: MutableList<TaskModel>) :
 
     }
 
+
+    class DiffUtil : androidx.recyclerview.widget.DiffUtil.ItemCallback<TaskModel>() {
+        override fun areItemsTheSame(oldItem: TaskModel, newItem: TaskModel): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: TaskModel, newItem: TaskModel): Boolean {
+            return oldItem == newItem
+        }
+
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
-        val layoutInflater:LayoutInflater = LayoutInflater.from(parent.context)
-        val binding : ViewDataBinding = DataBindingUtil.inflate(layoutInflater, R.layout.single_task_layout, parent, false)
-        return  MyViewHolder(binding.root)
+        val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
+        val binding: ViewDataBinding =
+            DataBindingUtil.inflate(layoutInflater, R.layout.single_task_layout, parent, false)
+        return MyViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
 
-        list[position].apply outer@{
+        getItem(position).apply outer@{
 
             holder.apply {
                 this.taskTitle.text = this@outer.title
@@ -58,8 +72,6 @@ class Adapter(private val list: MutableList<TaskModel>) :
                 time.text = TimeFormatter.timeFormat().format(this@outer.time)
             }
         }
-
-
     }
 
     private fun setBorderColor(viewHolder: MyViewHolder) {
@@ -73,16 +85,7 @@ class Adapter(private val list: MutableList<TaskModel>) :
         return (dp * Resources.getSystem().displayMetrics.density).toInt()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun setData(newList: List<TaskModel>) {
-        list.clear()
-        list.addAll(newList)
-        notifyDataSetChanged()
+    fun getTaskItemId(position: Int): Long {
+        return getItem(position).id
     }
-
-    override fun getItemId(position: Int): Long {
-        return list[position].id
-    }
-
-    override fun getItemCount() = list.size
 }

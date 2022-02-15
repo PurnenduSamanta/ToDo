@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.purnendu.todo.*
 import com.purnendu.todo.database.AppDatabase
-import com.purnendu.todo.database.TaskModel
 import com.purnendu.todo.databinding.ActivityHistoryBinding
 import com.purnendu.todo.swipe.SwipeGesture
 import com.purnendu.todo.swipe.SwipeViewDecoration
@@ -23,7 +22,6 @@ class HistoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHistoryBinding
     private lateinit var database: AppDatabase
     private lateinit var recyclerViewAdapter: Adapter
-    private var list = arrayListOf<TaskModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_history)
@@ -32,7 +30,7 @@ class HistoryActivity : AppCompatActivity() {
 
         database = AppDatabase.getDataBase(this)
 
-        recyclerViewAdapter = Adapter(list)
+        recyclerViewAdapter = Adapter()
         binding.historyRecyclerView.apply {
             adapter = recyclerViewAdapter
             layoutManager = LinearLayoutManager(this@HistoryActivity)
@@ -73,7 +71,7 @@ class HistoryActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val id = recyclerViewAdapter.getItemId(viewHolder.absoluteAdapterPosition)
+                val id = recyclerViewAdapter.getTaskItemId(viewHolder.absoluteAdapterPosition)
                 when (direction) {
                     ItemTouchHelper.RIGHT -> {
                         CoroutineScope(Dispatchers.IO).launch {
@@ -96,7 +94,7 @@ class HistoryActivity : AppCompatActivity() {
         {
 
             if (it != null) {
-                recyclerViewAdapter.setData(it.reversed())
+                recyclerViewAdapter.submitList(it.reversed())
                 if (it.isEmpty())
                     Toast.makeText(this, "No Task found", Toast.LENGTH_SHORT).show()
 
