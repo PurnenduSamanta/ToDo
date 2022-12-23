@@ -1,5 +1,5 @@
 # DoYourTask
-Task management App
+Task Management Application
 
 You can create a task with date and time,in task page there is right swipe to delete the task and left swipe to mark as done functionalities are there.
 This is first time I am using Room database with Live data
